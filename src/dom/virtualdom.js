@@ -5,12 +5,13 @@ import { arrayToFlat } from "../utils/arr.js"
 /**
  * DOMをObjectで構築するが、そのObjectを作る関数
  * なくてもいいが、あった方が便利なので作る
- * @param {"button" | "div" | "p" | "h1" | "input"} type 
+ * @param {"button" | "div" | "p" | "h1" | "input" | "img"} type 
  * @param { {
  *  onClick?: ()=> void,
  *  style?: string,
  *  class?: string,
- *  innerHTML?: string
+ *  innerHTML?: string,
+ *  src?: string
  *} } props?
  * @param  {...any} children 
  * @returns Object
@@ -70,6 +71,9 @@ const componentRenderHelper = (vnode) => {
     }
     if(vnode.props?.innerHTML) {
         el.innerHTML = vnode.props.innerHTML
+    }
+    if(vnode.props?.src) {
+        el.src = vnode.props.src
     }
     return el
 }
@@ -220,8 +224,9 @@ const componentPatchHelper = (parent, vnodeOld,  vnodeNew, index) => {
      *
      */
     //const thisEl = parent.querySelector(`${vnodeNew.type}:nth-child(${index})`)
-    const thisEl = parent.querySelector(`*:nth-child(${index})`)
-    //console.log(parent, thisEl, vnodeNew.children, `*:nth-child(${index})`)
+    //const thisEl = parent.querySelector(`*:nth-child(${index})`)
+    const thisEl = parent.childNodes[index - 1]
+    //console.log(parent, thisEl, vnodeNew.children, parent.childNodes, index)
     const [isSome, reason] = isSomeElement(vnodeOld, vnodeNew)
     //if(!isSome) return patchElement(parent, thisEl, reason, vnodeNew, vnodeOld)
     if (!isSome) patchElement(parent, thisEl, reason, vnodeNew, vnodeOld)
