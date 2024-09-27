@@ -1,0 +1,23 @@
+.emailListItem {
+    transition: all .3s ease;
+    cursor: pointer;
+    position: relative;
+}
+.emailListItem::after {
+    content: "";
+    width: 100%;
+    height: 12px;
+    display: block;
+    background-color: #FFA000;
+    opacity: 0.3;
+    position: absolute;
+    top: 32px;
+    max-width: 60%;
+    transition: all .3s ease;
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+}
+.emailListItem:hover::after {
+    transform: scaleX(1);
+}
