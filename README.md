@@ -3,7 +3,7 @@
 > [!NOTE]
 > This is created by me for me
 
-![img](https://file+.vscode-resource.vscode-cdn.net/Users/apple/Documents/docs/www/static/nnn/email/public/lp/img.png "スクリーンショット")
+![img](/public/lp/img.png "スクリーンショット")
 
 ## Feature
 
