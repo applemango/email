@@ -8,11 +8,13 @@ export const EmailComponent = component
 export const Email = EmailComponent(({ email })=> {
     
     return h("div", {},
-        h("div", {
-            innerHTML: email.body_html,
-            style: s({
-                padding: "32px"
-            })
+        h("iframe", {
+            style: "height: calc(100dvh - 48px); margin: 0; border: none;",
+            attr: {
+                srcdoc: email.body_html || email.body_text,
+                width: "100%",
+                sandbox: "allow-script"
+            }
         })
     )
     
