@@ -3,19 +3,33 @@
 import { arrayToFlat } from "../utils/arr.js"
 
 /**
- * DOMをObjectで構築するが、そのObjectを作る関数
- * なくてもいいが、あった方が便利なので作る
- * @param {"button" | "div" | "p" | "h1" | "input" | "img"} type 
- * @param { {
- *  onClick?: ()=> void,
- *  style?: string,
- *  class?: string,
- *  innerHTML?: string,
- *  src?: string
- *} } props?
- * @param  {...any} children 
- * @returns Object
+ * @typedef {"button" | "div" | "p" | "h1" | "input" | "img" | "a" | "h2" | "h3" | "h4" | "h5" | "h6"} VNodeType
+ * 
+ * @typedef VNodeProps
+ * @property {(e)=> {}?} onClick
+ * @property {string?} style
+ * @property {string?} class
+ * @property {string?} innerHTML
+ * 
+ * @typedef {VNode | string | boolean | number} VNodeChild
+ * @typedef {Array<VNodeChild>} VNodeChildren
+ * 
+ * @typedef VNode
+ * @property {VNodeType} type
+ * @property {VNodeProps} props
+ * @property {VNodeChildren} children
  */
+
+
+/**
+  * DOMをObjectで構築するが、そのObjectを作る関数
+  * なくてもいいが、あった方が便利なので作る
+  * 
+  * @param {VNodeType} type 
+  * @param {VNodeProps} props 
+  * @param  {...VNodeChild} children 
+  * @returns {VNode}
+  */
 export const h = (type, props, ...children) => {
     return {
         type, props, children
@@ -25,7 +39,7 @@ export const h = (type, props, ...children) => {
 /**
  * `componentRenderHelper`から切り出した子要素を親要素にくっつけていく関数
  * @param {Element} el 
- * @param {any} children 
+ * @param {VNodeChildren} children 
  */
 const componentRenderHelperChildren = (el, children) => {
     //fixChildren(children).map((c) => {
@@ -44,7 +58,7 @@ const componentRenderHelperChildren = (el, children) => {
 
 /**
  * hから出てきたvnodeをElementに変換していく関数、再起的に実行したいので切り出した
- * @param {any} vnode 
+ * @param {VNode} vnode 
  * @returns Element
  */
 const componentRenderHelper = (vnode) => {
@@ -80,8 +94,8 @@ const componentRenderHelper = (vnode) => {
 
 /**
  * 要素が変更されたかどうか検出する関数
- * @param {any} vnodeOld 
- * @param {any} vnodeNew 
+ * @param {VNode} vnodeOld 
+ * @param {VNode} vnodeNew 
  * @returns [boolean, Array<string>]
  */
 const isSomeElement = (vnodeOld, vnodeNew, deep = 0) => {
@@ -169,8 +183,8 @@ export const fixChildren = (vnode) => {
  * @param {Element} parent 
  * @param {Element} element 
  * @param {Array<string>} reason 
- * @param {any} vnode 
- * @param {any} oldNode 
+ * @param {VNode} vnode 
+ * @param {VNode} oldNode 
  */
 const patchElement = (parent, element, reason, vnode, oldNode) => {
     if (reason.includes("type")) {
@@ -195,8 +209,8 @@ const patchElement = (parent, element, reason, vnode, oldNode) => {
 /**
  * 子要素が文字の時だけ別の処理が必要なので切り出した
  * @param {Element} element 
- * @param {any} vnode 
- * @param {any} oldNode 
+ * @param {VNode} vnode 
+ * @param {VNode} oldNode 
  * @returns boolean
  */
 const patchText = (element, vnode, oldNode) => {
