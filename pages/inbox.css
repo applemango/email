@@ -1,0 +1,12 @@
+.emailSidebarButton {
+    transition: all .3s ease;
+    background-color: #fff;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #eee;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.emailSidebarButton:hover {
+    background-color: #fafafa;
+}

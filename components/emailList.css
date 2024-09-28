@@ -11,7 +11,7 @@
     background-color: #FFA000;
     opacity: 0.3;
     position: absolute;
-    top: 32px;
+    top: 24px;
     max-width: 60%;
     transition: all .3s ease;
     transform: scaleX(0);

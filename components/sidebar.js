@@ -11,10 +11,15 @@ export const SideBar = SideBarComponent(({}) => {
         style: s({
             width: "250px",
             borderRight: "1px solid #eee",
-            marginRight: "0px"
+            marginRight: "0px",
+            display: "flex",
+            flexDirection: "column",
+            padding: "8px"
         })
     },
-        
+        h("button", {
+            class: "sidebarButton"
+        }, "Inbox")
     )
 
 })

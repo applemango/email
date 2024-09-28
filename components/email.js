@@ -9,7 +9,7 @@ export const Email = EmailComponent(({ email })=> {
     
     return h("div", {},
         h("iframe", {
-            style: "height: calc(100dvh - 48px); margin: 0; border: none;",
+            style: "height: calc(100dvh - 48px); margin: 0; border: none; border-radius: 8px;",
             attr: {
                 srcdoc: email.body_html || email.body_text,
                 width: "100%",

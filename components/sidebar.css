@@ -1,0 +1,10 @@
+.sidebarButton {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 10px 0px;
+    border-radius: 6px;
+    transition: all .3s ease;
+}
+.sidebarButton:hover {
+    background-color: #fafafa;
+}
