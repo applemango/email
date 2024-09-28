@@ -7,31 +7,6 @@
         <meta name="loadpage" src="/index.html">
         <script type="module" src="./src/dom/init.js"></script>
         <title>Document</title>
-        <script type="module">
-            /*import { App } from "./pages/index.js"
-            var app = App
-            app.render()
-            Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
-                app.patch()
-            }))*/
-        </script>
-        <script type="module">
-            /*import { App } from "./pages/index.js"
-            window.addEventListener("popstate", (event) => {
-                console.log("index", event, app)
-                document.querySelector("body").innerHTML = ""
-                var app = App
-                app.render()
-                Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
-                    app.patch()
-                }))
-            });*/
-            /*import { reImportPage } from "./src/dom/route.js"
-            window.addEventListener("popstate", (event) => {
-                console.log("inbox", event)
-                reImportPage("/index.html")
-            });*/
-        </script>
     </head>
     <body>
         <div id="root"></div>

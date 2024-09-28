@@ -1,47 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./components/emailList.css">
-    <link rel="stylesheet" href="./components/emailToolTip.css">
-    <link rel="stylesheet" href="./components/email.css">
-    <link rel="stylesheet" href="./components/sidebar.css">
-    <link rel="stylesheet" href="./index.css">
-    <meta name="loadscript" src="/pages/inbox.js">
-    <meta name="loadpage" src="/inbox.html">
-    <script type="module" src="./src/dom/init.js"></script>
-    <title>Document</title>
-    <script type="module">
-        /*import { App } from "./pages/inbox.js"
-        var app = App
-        app.render()
-        Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
-            app.patch()
-        }))*/
-    </script>
-    <script>
-        /*import { App } from "./pages/inbox.js"
-        window.addEventListener("popstate", (event) => {
-            console.log("inbox", event, app)
-            document.querySelector("body").innerHTML = ""
-            var app = App
-            app.render()
-            Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
-                app.patch()
-            }))
-        });*/
-        /*import { reImportPage } from "./src/dom/route.js"
-        window.addEventListener("popstate", (event) => {
-            console.log("inbox", event)
-            reImportPage("/inbox.html")
-        });*/
-    </script>
-</head>
-
-<body>
-    <div id="root"></div>
-</body>
-
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./components/emailList.css">
+        <link rel="stylesheet" href="./components/emailToolTip.css">
+        <link rel="stylesheet" href="./components/email.css">
+        <link rel="stylesheet" href="./components/sidebar.css">
+        <link rel="stylesheet" href="./index.css">
+        <meta name="loadscript" src="/pages/inbox.js">
+        <meta name="loadpage" src="/inbox.html">
+        <script type="module" src="./src/dom/init.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
 </html>

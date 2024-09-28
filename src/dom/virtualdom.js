@@ -7,9 +7,11 @@ import { arrayToFlat } from "../utils/arr.js"
  * 
  * @typedef VNodeProps
  * @property {(e)=> {}?} onClick
+ * @property {(e)=> {}?} onChange
  * @property {string?} style
  * @property {string?} class
  * @property {string?} innerHTML
+ * @property {object?} attr
  * 
  * @typedef {VNode | string | boolean | number} VNodeChild
  * @typedef {Array<VNodeChild>} VNodeChildren
@@ -56,6 +58,11 @@ const componentRenderHelperChildren = (el, children) => {
     })
 }
 
+export const handleEvent = {
+    onClick: "click",
+    onChange: "change"
+}
+
 /**
  * hから出てきたvnodeをElementに変換していく関数、再起的に実行したいので切り出した
  * @param {VNode} vnode 
@@ -66,28 +73,27 @@ const componentRenderHelper = (vnode) => {
      * @type Element
      */
     const el = window.document.createElement(vnode?.type || "div")
-    if (!vnode) {
-        console.log("vnode is undefined!")
-        //el.innerText = vnode
-        return el
-    }
-    if(vnode.props?.onClick) {
+    const props = vnode.props
+    if (!vnode || !props) return el
+    /*if(vnode.props?.onClick) {
         el.addEventListener("click", vnode.props.onClick)
     }
-    if(vnode.props?.class) {
-        el.classList.add(vnode.props.class)
-    }
-    if(vnode.children) {
-        componentRenderHelperChildren(el, vnode.children)
-    }
-    if(vnode.props?.style) {
-        el.style = vnode.props.style
-    }
-    if(vnode.props?.innerHTML) {
-        el.innerHTML = vnode.props.innerHTML
-    }
-    if(vnode.props?.src) {
-        el.src = vnode.props.src
+    if (vnode.props?.onChange) {
+        el.addEventListener("change", vnode.props.onChange)
+    }*/
+    if(props.class) el.classList.add(props.class)
+    if(vnode.children) componentRenderHelperChildren(el, vnode.children) // @ts-ignore
+    if(props.style) el.style = props.style
+    if(props.innerHTML) el.innerHTML = props.innerHTML
+    Object.keys(vnode.props).map((key) => {
+        if (handleEvent[key]) {
+            el.addEventListener(handleEvent[key], vnode.props[key])
+        }
+    })
+    if(vnode.props?.attr) {
+        Object.keys(vnode.props.attr).map((key)=> {
+            el.setAttribute(key, vnode.props.attr[key])
+        })
     }
     return el
 }
@@ -251,7 +257,6 @@ const componentPatchHelper = (parent, vnodeOld,  vnodeNew, index) => {
         return vnodeNew.children.map((_, i) => {
             //const [oldChild, newChild] = [fixChildren(vnodeOld.children)[i], fixChildren(vnodeNew.children)[i]]
             const [oldChild, newChild] = [vnodeOld.children[i], vnodeNew.children[i]]
-            //console.log(oldChild, newChild)
             /**
              * この時点で子要素が文字だと分かった場合は、子要素が変更されてるか確認して早めに切り上げる
              */
