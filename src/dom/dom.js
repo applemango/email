@@ -23,5 +23,5 @@ export const getMetaTag = (id) => {
  */
 export const writeDoc = (html) => {
     const doc = (new DOMParser).parseFromString(`${html}`, 'text/html');
-    document.querySelector("body").innerHTML = doc.documentElement.innerHTML;
+    document.querySelector(":root").innerHTML = doc.documentElement.innerHTML;
 }

@@ -1,11 +1,11 @@
-import { Router } from "./useSpa.js"
+import { getMetaTag } from "../src/dom/dom.js"
+import { reImportPage, router } from "../src/dom/route.js"
 
-const router = new Router()
 
 export const useDynamicRouting = () => {
     return {
-        go: (href)=> {
-            router.replacePage(href)
+        go: async (href)=> {
+            reImportPage(href)
         }
     }
 }
