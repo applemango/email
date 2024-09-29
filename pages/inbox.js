@@ -1,4 +1,5 @@
 import { Email } from "../components/email.js"
+import { EmailForm } from "../components/emailform.js"
 import { EmailList } from "../components/emailList.js"
 import { EmailToolTip } from "../components/emailToolTip.js"
 import { SideBar } from "../components/sidebar.js"
@@ -66,6 +67,20 @@ export const EmailContainer = component(({ email, setEmail })=> {
 })
 
 export const EmailBoxContainer = component(({emails, setEmail})=> {
+
+    /**
+     * @type {typeof useState<boolean>}
+     */
+    const useIsCompose = useState
+    const [isCompose, setIsCompose] = useIsCompose("compose", false)
+    
+
+    /**
+     * @type {typeof useState<boolean>}
+     */
+    const useIsSended = useState
+    const [isSended, setIsSended] = useIsCompose("sended", false)
+
     return h("div", {
         style: s({
             paddingLeft: "32px",
@@ -96,42 +111,71 @@ export const EmailBoxContainer = component(({emails, setEmail})=> {
             ),
         ),
 
-        /*h("div", {
+        h("div", {
             style: s({
-                //boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",,
-                border: "1px solid #eee",
-                borderRadius: "8px",
-                marginBottom: "16px",
-                padding: "4px 16px",
-                display: "flex",
-                //justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
+                height: isCompose() ? "0px" : "72px",
                 transition: "0.3s",
-                gap: "16px"
-
+                transitionDelay: "0.6s",
+                overflow: "hidden",
             })
         },
-            h("img", {
-                attr: {
-                    src: "/public/icon/pena.png",
-                    width: "18px",
-                    height: "18px",
-                }
-            }),
-            h("p", {
+            h("div", {
                 style: s({
-                    color: "#777",
-                    fontSize: "14px"
-                })
-            }, "Compose New Email")
-        ),*/
+                    //boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",,
+                    border: "1px solid #eee",
+                    borderRadius: "8px",
+                    marginBottom: "16px",
+                    padding: "4px 16px",
+                    display: "flex",
+                    //justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    transition: "0.3s",
+                    gap: "16px",
+                    opacity: isCompose() ? "0" : "1",
+                    transition: "0.3s",
+                    transform: isCompose() ? "scaleX(0)" : "scaleX(1)",
+                }),
+                onClick: () => {
+                    setIsCompose(true)
+                    setIsSended(false)
+                }
+            },
+                h("img", {
+                    attr: {
+                        src: "/public/icon/pena.png",
+                        width: "18px",
+                        height: "18px",
+                    }
+                }),
+                h("p", {
+                    style: s({
+                        color: "#777",
+                        fontSize: "14px"
+                    })
+                }, "Compose New Email")
+            ),
+        ),
+
+        h("div", {
+            style: s({
+                transform: isCompose() ? "scaleY(1)" : "scaleY(0)",
+                opacity: isCompose() ? "1" : "0",
+                transformOrigin: "top",
+                height: isCompose() ? "322px" : "0px",
+                overflow: "hidden",
+                marginBottom: "16px",
+                transition: "0.6s",
+                transitionDelay: "0.9s",
+            })
+        },
+          EmailForm({})  
+        ),
 
         h("div", {},
             EmailList({
                 emails: emails(), onChangeEmail: (email) => {
                     setEmail(email)
-                    document.querySelector(".main").scrollTo({ top: 0 })
                 }
             })
         )

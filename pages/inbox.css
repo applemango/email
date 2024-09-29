@@ -6,6 +6,7 @@
     border: 1px solid #eee;
     cursor: pointer;
     border-radius: 4px;
+    min-width: 88px;
 }
 .emailSidebarButton:hover {
     background-color: #fafafa;
