@@ -3,7 +3,7 @@
 > [!NOTE]
 > This is created by me for me
 
-![img](/public/lp/img.png "スクリーンショット")
+![img](/public/lp/img3.png "スクリーンショット")
 
 ## Feature
 
