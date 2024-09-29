@@ -66,7 +66,7 @@ export const EmailContainer = component(({ email, setEmail })=> {
     )
 })
 
-export const EmailBoxContainer = component(({emails, setEmail})=> {
+export const EmailBoxContainer = component(({emails, setEmail, groq })=> {
 
     /**
      * @type {typeof useState<boolean>}
@@ -100,14 +100,17 @@ export const EmailBoxContainer = component(({emails, setEmail})=> {
                     margin: "16px",
                     padding: "16px",
                     borderRadius: "8px",
+                    paddingBottom: "0",
+                    marginBottom: "0",
                 })
             },
 
-                /*h("p", {
+                h("p", {
                     style: s({
-                        color: "#E91E63"
+                        color: "#222",
+                        fontSize: "14px"
                     })
-                }, groq() || "hello!")*/
+                }, groq() || "hello!")
             ),
         ),
 
@@ -219,11 +222,11 @@ export const App = page(() => {
         setEmails(emails.reverse())
 
         if(emails.length) {
-            //setGroq("")
-            //await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.reverse().slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
-            //    console.log(event)
-            //    setGroq(groq().concat(event))
-            //})
+            setGroq("")
+            await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.reverse().slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
+                console.log(event)
+                setGroq(groq().concat(event))
+            })
         }
     })
 
@@ -273,7 +276,7 @@ export const App = page(() => {
                     pointerEvents: email() ? "none" : "auto",
                 })
             },
-                EmailBoxContainer({ emails, setEmail })
+                EmailBoxContainer({ emails, setEmail, groq })
             )
         )
 

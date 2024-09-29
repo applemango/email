@@ -106,7 +106,7 @@ export const EmailForm = EmailFormComponent(({ }) => {
 
     const changeBody = (value) => {
         setBody(value)
-        document.querySelector("textarea.body").value = value
+        document.querySelector("textarea.Body").value = value
     }
 
     const clearAll = () => {
