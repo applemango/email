@@ -89,6 +89,7 @@ export const CssProperty = {
     maskRepeat: "mask-repeat",
     maskOffset: "mask-offset",
     maskUnits: "mask-units",
+    pointerEvents: "pointer-events"
 }
 
 /**

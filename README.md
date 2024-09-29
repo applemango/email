@@ -57,7 +57,7 @@
 **技術スタック**
 
 - vanilla js
-- vanilla, html
+- vanilla html
 - vanilla css
 
 ### 与太話
