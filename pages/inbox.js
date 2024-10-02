@@ -110,7 +110,7 @@ export const EmailBoxContainer = component(({emails, setEmail, groq })=> {
                         color: "#222",
                         fontSize: "14px"
                     })
-                }, groq() || "hello!")
+                }, groq() || "")
             ),
         ),
 
@@ -219,15 +219,60 @@ export const App = page(() => {
             setEmail(null)
         }
         const emails = await getInbox(address().concat("@i32.jp"))
-        setEmails(emails.reverse())
+
+        /**
+         * @type {EmailTypes.Email}
+         */
+        const welcomeEmail = {
+            body_subject: "Welcome to i32.jp",
+            body_html: `
+                <div style="padding: 16px;">
+                    <pre>
+                        <code>
+                            # 📬 Ai32
+
+                            > [!NOTE]
+                            > This is created by me for me
+
+
+
+                            ## Feature
+
+                            - ワンクリックで @i32.jpのメールアドレスが使える
+                            - AIによるメールボックスの要約
+                              - AIがメールボックスにあるメールを要約して重要なメールを見逃しません!
+                            - シンプルなUI
+                              - シンプルなUIで余計な情報をそぎ落とし、ユーザーに迷いを与えません!
+
+
+
+                            ## TODO
+
+                            * [X] メール送信
+                            * [X] メール作成のテンプレート
+                            * [  ] android端末において、emailがfetchされない、もしくは描写されない
+                        </code>
+                    </pre>
+                </div>
+            `,
+            address_from: "email@i32.jp",
+            address_to: address(),
+            date: new Date().toISOString(),
+        }
+        setEmails([welcomeEmail])
 
         if(emails.length) {
+            setEmails(emails.concat().reverse())
+            
             setGroq("")
-            await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.reverse().slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
+            await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.concat().reverse().slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
                 console.log(event)
                 setGroq(groq().concat(event))
             })
+            
+            return
         }
+
     })
 
     addEventListener("popstate", () => {
