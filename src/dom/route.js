@@ -9,7 +9,36 @@ export const reImportPage = async (href) => {
     const module = await import(src)
     const app = module.App
     app.render()
-    Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
+    registerAllMetaTags(() => {
         app.patch()
-    }))
+    })
 }
+
+export const registerAllMetaTags = (fn) => {
+    return Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => registerMetaTag(meta, fn) )
+}
+
+export const registerMetaTag = (meta, fn) => {
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' || mutation.type === 'childList') {
+                fn(mutation);
+            }
+        });
+    });
+
+    observer.observe(meta, {
+        attributes: true,
+        childList: true,
+        /*
+         * 多分いらない
+         * ```
+         * characterData: true,
+         * subtree: true
+         * ```
+         */
+    });
+
+    // disconnectとかする用
+    return observer;
+};

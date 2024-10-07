@@ -1,4 +1,4 @@
-import { reImportPage } from "./route.js";
+import { registerAllMetaTags, reImportPage } from "./route.js";
 
 (async ()=> {
     const loadScriptMeta = document.querySelector("meta[name=\"loadscript\"]")
@@ -10,9 +10,13 @@ import { reImportPage } from "./route.js";
     const module = await import(script)
     const app = module.App
     app.render()
-    Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
+
+    registerAllMetaTags(() => {
         app.patch()
-    }))
+    })
+    /*Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
+        app.patch()
+    }))*/
 
     window.addEventListener("popstate", (event)=> {
         reImportPage(page)
