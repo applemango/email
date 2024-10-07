@@ -13,7 +13,7 @@ export const Email = EmailComponent(({ email })=> {
             attr: {
                 srcdoc: email.body_html || email.body_text,
                 width: "100%",
-                sandbox: "allow-script"
+                sandbox: "allow-downloads"
             }
         })
     )
