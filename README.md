@@ -19,7 +19,14 @@
 
 * [X] メール送信
 * [X] メール作成のテンプレート
-* [X]  android端末において、emailがfetchされない、もしくは描写されない
+* [X] android端末において、emailがfetchされない、もしくは描写されない
+* [ ] 擬似的な動的ルーティング
+  * [ ] Cloudflare Dynamic Redirectを使う
+    1. `wildcard_replace(http.request.full_uri, "/email/*", "/email?id=${1}")`
+    2. `wimdow.history.pushState("/email/${id}")`
+* [ ] Backend非依存化
+  * [ ] 毎時Github Actionでjson fileの生成
+  * [ ] Clientからそのjson fileをfetchする
 
 ## よくわからないはなし
 
