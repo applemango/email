@@ -224,7 +224,7 @@ export const App = page(() => {
     const [groq, setGroq] = useGroqState("groq", "");
 
     useEffect("load", async () => {
-        if (location.pathname == "/inbox.html" && email()) {
+        if (location.pathname == "/inbox.html" || location.pathname == "/inbox" && email()) {
             setEmail(null)
         }
         const emails = await getInbox(address().concat("@i32.jp"))
