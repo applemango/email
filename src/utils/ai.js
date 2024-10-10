@@ -55,17 +55,24 @@ export const getGroqChatCompletionStream = async (content, event) => {
             const { done, value } = await reader.read();
             const chunk = decoder.decode(value, { stream: true });
             
-            /**
-             * 結果はdata: {"id": 1, ...}みたいな物が、複数行にまたがって帰ってくるので綺麗に整える
-             */
-            const parsed = chunk
-                            .split("data: ")
-                            .filter((text)=> text.startsWith("{\"id\":"))
-                            .map((text)=> JSON.parse(text))
-                            .map((json)=> json.choices[0].delta.content)
-                            .join("")
+            try {
 
-            event(parsed)
+                /*
+                 * 結果はdata: {"id": 1, ...}みたいな物が、複数行にまたがって帰ってくるので綺麗に整える
+                 */
+                const parsed = chunk
+                    .split("data: ")
+                    .filter((text) => text.startsWith("{\"id\":"))
+                    .map((text) => JSON.parse(text))
+                    .map((json) => json.choices[0].delta.content)
+                    .join("")
+
+                event(parsed)
+
+            } catch (e) {
+                console.error(e)
+            }
+
 
             if (done) return reader.releaseLock();
             return read();

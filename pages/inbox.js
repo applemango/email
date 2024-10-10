@@ -271,11 +271,10 @@ export const App = page(() => {
         setEmails([welcomeEmail])
 
         if(emails.length) {
-            setEmails(emails.concat().reverse())
+            setEmails(emails)
             
             setGroq("")
-            await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.concat().reverse().slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
-                console.log(event)
+            await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
                 setGroq(groq().concat(event))
             })
             
