@@ -3,15 +3,16 @@ import { EmailForm } from "../components/emailform.js"
 import { EmailList } from "../components/emailList.js"
 import { EmailToolTip } from "../components/emailToolTip.js"
 import { SideBar } from "../components/sidebar.js"
+import { useDynamicRouting } from "../hook/useDynamicRouting.js"
 import { useEffect } from "../hook/useEffect.js"
 import { useLocalStorageState } from "../hook/useLocalStorageState.js"
 import { useState } from "../hook/useState.js"
+import { router } from "../src/dom/route.js"
 import { s } from "../src/dom/style.js"
 import { component, h, page } from "../src/dom/virtualdom.js"
 import { getAllEmail, getInbox } from "../src/email/fetch.js"
 import * as EmailTypes from "../src/email/type.js"
 import { getGroqChatCompletion, getGroqChatCompletionStream } from "../src/utils/ai.js"
-
 
 /**
  * @type {typeof component<{
@@ -50,7 +51,10 @@ export const EmailContainer = component(({ email, setEmail })=> {
                 paddingTop: "48px",
             }),
         },
-            EmailSidebar({ onBack: () => setEmail(null) }),
+            EmailSidebar({ onBack: () => {
+                setEmail(null)
+                router.historyPush(`/inbox`)
+            } }),
             h("div", {
                 style: s({
                     width: "80%",
@@ -179,6 +183,7 @@ export const EmailBoxContainer = component(({emails, setEmail, groq })=> {
             EmailList({
                 emails: emails(), onChangeEmail: (email) => {
                     setEmail(email)
+                    router.historyPush(`/email/${email.uuid}`)
                 }
             })
         )
@@ -187,6 +192,9 @@ export const EmailBoxContainer = component(({emails, setEmail, groq })=> {
 })
 
 export const App = page(() => {
+
+    const { go } = useDynamicRouting()
+
     /**
      * 参照 => https://github.com/microsoft/TypeScript/issues/27387#issuecomment-1223795056
      * @type {typeof useState<Array<EmailTypes.Email>>}
@@ -205,14 +213,15 @@ export const App = page(() => {
      */
     const useAddressState = useLocalStorageState
     const [address, setAddress] = useAddressState("address", "")
+    if(!address()) {
+        go("/")
+    }
 
     /**
      * @type {typeof useState<string>}
      */
     const useGroqState = useState
     const [groq, setGroq] = useGroqState("groq", "");
-        
-    
 
     useEffect("load", async () => {
         if (location.pathname == "/inbox.html" && email()) {

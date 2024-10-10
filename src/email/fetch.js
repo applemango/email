@@ -16,6 +16,14 @@ export const getAllEmail = async () => {
     return await req("/email")
 }
 
+/**
+ * @param {string} id 
+ * @returns {Types.Email}
+ */
+export const getEmail = async (id) => {
+    return await req(`/email/${id}`)
+}
+
 export const sendEmail = async (body) => {
     return await fetch("https://email-worker.i64.workers.dev/email", {
         method: "POST",

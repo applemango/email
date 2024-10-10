@@ -93,7 +93,7 @@ export const App = page(() => {
                         cursor: "pointer"
                     }),
                     onClick: () => {
-                        go("/inbox.html")
+                        go("/inbox")
                     }
                 }, "Check your Inbox")
             ),
