@@ -4,7 +4,6 @@ import { useState } from "../hook/useState.js";
 import { s } from "../src/dom/style.js";
 import { component, h } from "../src/dom/virtualdom.js";
 import { sendEmail } from "../src/email/fetch.js";
-import * as Types from "../src/email/type.js"
 import { getGroqChatCompletionStream } from "../src/utils/ai.js";
 
 

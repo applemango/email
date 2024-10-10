@@ -1,4 +1,3 @@
-import { s } from "../src/dom/style.js";
 import { component, h } from "../src/dom/virtualdom.js";
 import * as Types from "../src/email/type.js"
 /**

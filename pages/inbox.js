@@ -1,8 +1,6 @@
 import { Email } from "../components/email.js"
 import { EmailForm } from "../components/emailform.js"
 import { EmailList } from "../components/emailList.js"
-import { EmailToolTip } from "../components/emailToolTip.js"
-import { SideBar } from "../components/sidebar.js"
 import { useDynamicRouting } from "../hook/useDynamicRouting.js"
 import { useEffect } from "../hook/useEffect.js"
 import { useLocalStorageState } from "../hook/useLocalStorageState.js"
@@ -10,9 +8,9 @@ import { useState } from "../hook/useState.js"
 import { router } from "../src/dom/route.js"
 import { s } from "../src/dom/style.js"
 import { component, h, page } from "../src/dom/virtualdom.js"
-import { getAllEmail, getInbox } from "../src/email/fetch.js"
+import { getInbox } from "../src/email/fetch.js"
 import * as EmailTypes from "../src/email/type.js"
-import { getGroqChatCompletion, getGroqChatCompletionStream } from "../src/utils/ai.js"
+import { getGroqChatCompletionStream } from "../src/utils/ai.js"
 
 /**
  * @type {typeof component<{

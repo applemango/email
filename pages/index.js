@@ -1,10 +1,9 @@
 import { Footer, Header } from "../components/header.js"
 import { useDynamicRouting } from "../hook/useDynamicRouting.js"
-import { useEffect } from "../hook/useEffect.js"
 import { useLocalStorageState } from "../hook/useLocalStorageState.js"
 import { useState } from "../hook/useState.js"
 import { s } from "../src/dom/style.js"
-import { component, h, page } from "../src/dom/virtualdom.js"
+import { h, page } from "../src/dom/virtualdom.js"
 
 export const App = page(() => {
     /**
