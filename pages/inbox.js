@@ -224,10 +224,6 @@ export const App = page(() => {
     const [groq, setGroq] = useGroqState("groq", "");
 
     useEffect("load", async () => {
-        if (location.pathname == "/inbox.html" || location.pathname == "/inbox" && email()) {
-            setEmail(null)
-        }
-        const emails = await getInbox(address().concat("@i32.jp"))
 
         /**
          * @type {EmailTypes.Email}
@@ -269,6 +265,12 @@ export const App = page(() => {
             date: new Date().toISOString(),
         }
         setEmails([welcomeEmail])
+
+        if (location.pathname == "/inbox.html" || location.pathname == "/inbox" && email()) {
+            setEmail(null)
+        }
+        const emails = await getInbox(address().concat("@i32.jp"))
+
 
         if(emails.length) {
             setEmails(emails)
