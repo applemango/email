@@ -21,6 +21,12 @@ export const App = page(() => {
         const id = url.searchParams.get("id")
         router.historyPush(`/email/${id}`)
         if(id && id != email()?.uuid) {
+            /**
+             * 再レンダリングを無理やり引き起こす
+             * iframeのattr属性が再レンダリングの検出対象外のため ( めんどかった )
+             */
+            setEmail(null)
+
             const email = await getEmail(id)
             if(!email) {
                 go("/inbox")
