@@ -2,7 +2,7 @@
 
 /**
  * DOMからメタタグを取得する
- * @param {string} id 
+ * @param {string} id
  * @returns { Element }
  */
 export const getMetaTag = (id) => {

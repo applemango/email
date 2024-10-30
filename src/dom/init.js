@@ -14,9 +14,6 @@ import { registerAllMetaTags, reImportPage } from "./route.js";
     registerAllMetaTags(() => {
         app.patch()
     })
-    /*Array.from(document.querySelectorAll("meta[state_id]")).map((meta) => meta.addEventListener("DOMSubtreeModified", () => {
-        app.patch()
-    }))*/
 
     window.addEventListener("popstate", (event)=> {
         reImportPage(page)

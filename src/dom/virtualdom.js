@@ -1,10 +1,8 @@
 //@ts-check
 
-import { arrayToFlat } from "../utils/arr.js"
-
 /**
  * @typedef {"button" | "div" | "p" | "h1" | "input" | "img" | "a" | "h2" | "h3" | "h4" | "h5" | "h6"} VNodeType
- * 
+ *
  * @typedef VNodeProps
  * @property {(e)=> {}?} onClick
  * @property {(e)=> {}?} onChange
@@ -12,10 +10,10 @@ import { arrayToFlat } from "../utils/arr.js"
  * @property {string?} class
  * @property {string?} innerHTML
  * @property {object?} attr
- * 
+ *
  * @typedef {VNode | string | boolean | number} VNodeChild
  * @typedef {Array<VNodeChild>} VNodeChildren
- * 
+ *
  * @typedef VNode
  * @property {VNodeType} type
  * @property {VNodeProps} props
@@ -26,10 +24,10 @@ import { arrayToFlat } from "../utils/arr.js"
 /**
   * DOMをObjectで構築するが、そのObjectを作る関数
   * なくてもいいが、あった方が便利なので作る
-  * 
-  * @param {VNodeType} type 
-  * @param {VNodeProps} props 
-  * @param  {...VNodeChild} children 
+  *
+  * @param {VNodeType} type
+  * @param {VNodeProps} props
+  * @param  {...VNodeChild} children
   * @returns {VNode}
   */
 export const h = (type, props, ...children) => {
@@ -40,8 +38,8 @@ export const h = (type, props, ...children) => {
 
 /**
  * `componentRenderHelper`から切り出した子要素を親要素にくっつけていく関数
- * @param {Element} el 
- * @param {VNodeChildren} children 
+ * @param {Element} el
+ * @param {VNodeChildren} children
  */
 const componentRenderHelperChildren = (el, children) => {
     //fixChildren(children).map((c) => {
@@ -65,7 +63,7 @@ export const handleEvent = {
 
 /**
  * hから出てきたvnodeをElementに変換していく関数、再起的に実行したいので切り出した
- * @param {VNode} vnode 
+ * @param {VNode} vnode
  * @returns Element
  */
 const componentRenderHelper = (vnode) => {
@@ -75,22 +73,25 @@ const componentRenderHelper = (vnode) => {
     const el = window.document.createElement(vnode?.type || "div")
     const props = vnode.props
     if (!vnode || !props) return el
-    /*if(vnode.props?.onClick) {
-        el.addEventListener("click", vnode.props.onClick)
-    }
-    if (vnode.props?.onChange) {
-        el.addEventListener("change", vnode.props.onChange)
-    }*/
+
     if(props.class) el.classList.add(props.class)
     if(vnode.children) componentRenderHelperChildren(el, vnode.children) // @ts-ignore
     if(props.style) el.style = props.style
     if(props.innerHTML) el.innerHTML = props.innerHTML
-    Object.keys(vnode.props).map((key) => {
+
+    /**
+     * DOM要素にイベントリスナーをつけていく
+     */
+    Object.keys(props).map((key) => {
         if (handleEvent[key]) {
             el.addEventListener(handleEvent[key], vnode.props[key])
         }
     })
-    if(vnode.props?.attr) {
+
+    /**
+     * DOM要素に属性をつけていく
+     */
+    if(props.attr) {
         Object.keys(vnode.props.attr).map((key)=> {
             el.setAttribute(key, vnode.props.attr[key])
         })
@@ -100,76 +101,70 @@ const componentRenderHelper = (vnode) => {
 
 /**
  * 要素が変更されたかどうか検出する関数
- * @param {VNode} vnodeOld 
- * @param {VNode} vnodeNew 
+ * @param {VNode} vnodeOld
+ * @param {VNode} vnodeNew
  * @returns [boolean, Array<string>]
  */
-const isSomeElement = (vnodeOld, vnodeNew, deep = 0) => {
-    //if(deep > 1) return [true, 0]
+const isSomeElement = (vnodeOld, vnodeNew) => {
     /**
-     * いずれにしても、子要素に変更が加えられた場合、再起的に実行される関数`componentPatchHelper`が差異を見つけるため。
-     * この関数が深く見るのは計算量的に見ても非合理的である
-     * その為、子要素の長さが違う時だけ修正すれば良い
-     * @param {*} vnodeOld 
-     * @param {*} vnodeNew 
+     * 子要素に変更が加えられた場合、再起的に実行される関数`componentPatchHelper`が差異を見つけるため。
+     * この関数が深く見るのは計算量的に見てもあまりよくない
+     * その為、子要素の長さが違う時とTypeが違う時だけ修正すれば良い
+     * @param {*} vnodeOld
+     * @param {*} vnodeNew
      * @returns boolean
      */
     const isSomeChild = (vnodeOld, vnodeNew) => {
-        if (vnodeNew == vnodeOld) return true
-        if (typeof vnodeNew != typeof vnodeOld) return false
-        if (fixChildren(Array.from(vnodeNew || [])).length != fixChildren(Array.from(vnodeOld || [])).length) return false
-        if (fixChildren(Array.from(vnodeNew)).reduce((acc, _, i)=> {
-            return acc || fixChildren(vnodeNew)[i]?.type != fixChildren(vnodeOld)[i]?.type
-        }, false)) return false
-        //if (typeof fixChildren(vnodeNew)[0] != typeof fixChildren(vnodeOld)[0]) return false
         /**
-         * 計算量多すぎる、ここでも子要素を全部スキャンするのはいただけない
+         * 二つが全く同じ場合は計算量を減らすため即座にtrueを返す、ただしオブジェクトは含まない
          */
-        /*console.log(vnodeNew, vnodeOld, fixChildren(vnodeNew).length && fixChildren(vnodeNew).reduce((acc, _, i) => {
-            //console.log(vnodeOld, vnodeNew)
-            if (!acc && isSomeElement(fixChildren(vnodeOld)[i], fixChildren(vnodeNew)[i]))
-                return false
-            return true
-        }, false))
-        if (fixChildren(vnodeNew).length && fixChildren(vnodeNew).reduce((acc, _, i)=> {
-            //console.log(vnodeOld, vnodeNew)
-            if(!acc && isSomeElement(fixChildren(vnodeOld)[i], fixChildren(vnodeNew)[i], deep + 1))
-                return acc || false
-            return true
-        }, false)) return false*/
+        if (vnodeNew == vnodeOld) return true
+        /**
+         * 二つの要素のTypeが違うならそもそも同じはずないのでfalse
+         */
+        if (typeof vnodeNew != typeof vnodeOld) return false
+
+        const vnodeNewChildren = fixChildren(Array.from(vnodeNew || []))
+        const vnodeOldChildren = fixChildren(Array.from(vnodeOld || []))
+
+        /**
+         * 二つの要素の子要素の数が違うなら同じではないのでfalse
+         */
+        if (vnodeNewChildren.length != vnodeOldChildren.length) return false
+
+        /**
+         * 二つの要素の子要素それぞれに対してTypeが一致しているかみる、子要素のTypeが不一致だと
+         * 子要素が自分を再レンダリングするより、親要素が子要素を再レンダリングした方が楽
+         */
+        if (vnodeNewChildren.reduce((acc, _, i)=> {
+            return acc || vnodeNewChildren[i]?.type != vnodeOldChildren[i]?.type
+        }, false)) return false
+
+        /**
+         * 何もなければ同一と判断する
+         */
         return true
     }
-    const [o, n] = [vnodeOld, vnodeNew]
     const reasons = []
     if(vnodeOld.type!=vnodeNew.type)
         reasons.push("type")
-    if(o.props?.class!=n.props?.class) reasons.push("class")
-    if(o.props?.style!=n.props?.style) reasons.push("style")
-    //if(vnodeOld!=vnodeNew) reasons.push("children")
+    if(vnodeOld.props?.class!=vnodeNew.props?.class) reasons.push("class")
+    if(vnodeOld.props?.style!=vnodeNew.props?.style) reasons.push("style")
+
     /**
      * 直下の子要素のnodeが変わっていた場合 ( eg: 増えたり減ったり、あるいはnodeの種類変わった場合 ) patchが適応できないので検出して子要素ごと根こそぎ再レンダリングする
      */
     if (!isSomeChild(vnodeOld.children, vnodeNew.children))
         reasons.push("children")
-    /*if(
-        (
-            (typeof fixChildren(o.children) != "object")
-                && fixChildren(o.children) != fixChildren(n.children)
-        )
-        ||
-        (
-            (typeof fixChildren(o.children) == "object")
-                && fixChildren(o.children).length != fixChildren(n.children).length
-        )
-    ) reasons.push("children")*/
+
     return [reasons.length == 0, reasons]
 }
 
 /**
  * `h("div", list.map((item)=> h()))`みたいなことをすると配列が2次元になったりしてバグるのでそれの解消。
  * ちなみに、これを無くすこともできるが、一応。
- * @param {*} vnode 
- * @returns 
+ * @param {Array<VNode | Array<VNode>>} vnode
+ * @returns {Array<VNode>}
  */
 export const fixChildren = (vnode) => {
     if(!Array.isArray(vnode)) {
@@ -181,16 +176,15 @@ export const fixChildren = (vnode) => {
         }
         return [...acc, e]
     }, [])
-    //return arrayToFlat(vnode)
 }
 
 /**
  * 受け取った変更箇所を元に要素に変更を加える
- * @param {Element} parent 
- * @param {Element} element 
- * @param {Array<string>} reason 
- * @param {VNode} vnode 
- * @param {VNode} oldNode 
+ * @param {Element} parent
+ * @param {Element} element
+ * @param {Array<string>} reason
+ * @param {VNode} vnode
+ * @param {VNode} oldNode
  */
 const patchElement = (parent, element, reason, vnode, oldNode) => {
     if (reason.includes("type")) {
@@ -205,24 +199,20 @@ const patchElement = (parent, element, reason, vnode, oldNode) => {
     }
     if (reason.includes("children")) {
         const e = componentRenderHelper(vnode)
-        //console.log(parent, element, reason, vnode, oldNode)
-        //console.log(vnode, e)
-        //element.replaceChildren(e)
         element.replaceWith(e)
     }
 }
 
 /**
  * 子要素が文字の時だけ別の処理が必要なので切り出した
- * @param {Element} element 
- * @param {VNode} vnode 
- * @param {VNode} oldNode 
+ * @param {Element} element
+ * @param {VNode} vnode
+ * @param {VNode} oldNode
  * @returns boolean
  */
 const patchText = (element, vnode, oldNode) => {
     if (["string", "number", "boolean"].includes(typeof vnode)) {
         if(element.innerText != vnode.toString()) {
-            //console.log(element, vnode)
             element.innerText = vnode
             return true
         }
@@ -232,49 +222,47 @@ const patchText = (element, vnode, oldNode) => {
 
 /**
  * 再起的に要素の変更を検出していく関数、検出されたら変更を加える関数に渡す
- * @param {Element} parent 
- * @param {any} vnodeOld 
- * @param {any} vnodeNew 
- * @param {number} index 
- * @returns 
+ * @param {Element} parent
+ * @param {any} vnodeOld
+ * @param {any} vnodeNew
+ * @param {number} index
+ * @returns
  */
-const componentPatchHelper = (parent, vnodeOld,  vnodeNew, index) => {
-    /**
-     * 今回は複雑なことはしないので、親要素から自分を取得するのに、単純な:nth-childを使った方法を使う
-     *
-     */
-    //const thisEl = parent.querySelector(`${vnodeNew.type}:nth-child(${index})`)
-    //const thisEl = parent.querySelector(`*:nth-child(${index})`)
-    const thisEl = parent.childNodes[index - 1]
-    //console.log(parent, thisEl, vnodeNew.children, parent.childNodes, index)
+const componentPatchHelper = (parent, vnodeOld,  vnodeNew, index = 0) => {
+    const thisEl = parent.childNodes[index]
     const [isSome, reason] = isSomeElement(vnodeOld, vnodeNew)
-    //if(!isSome) return patchElement(parent, thisEl, reason, vnodeNew, vnodeOld)
+
     if (!isSome) patchElement(parent, thisEl, reason, vnodeNew, vnodeOld)
-    //console.log(reason)
+    /**
+     * 直下の子要素に対して変更が加えられていた場合、既に再レンダリングされているので処理を打ち切る
+     */
     if (reason.includes("children")) return
-    if(Array.isArray(vnodeNew.children)) {
-        //return fixChildren(vnodeNew.children).map((_, i) => {
-        return vnodeNew.children.map((_, i) => {
-            //const [oldChild, newChild] = [fixChildren(vnodeOld.children)[i], fixChildren(vnodeNew.children)[i]]
-            const [oldChild, newChild] = [vnodeOld.children[i], vnodeNew.children[i]]
-            /**
-             * この時点で子要素が文字だと分かった場合は、子要素が変更されてるか確認して早めに切り上げる
-             */
-            if (patchText(thisEl, newChild, oldChild)) {
-                return
-            }
-            /**
-             * 子要素に対しても同じように再起的に処理を加えていく
-             */
-            componentPatchHelper(thisEl, oldChild, newChild, i + 1)
-        })
-    }
+
+    /**
+     * レンダリングする必要がある子要素は常に配列で渡される
+     * 逆に言えばundefinedなど不必要なものは配列で渡されないので無視する
+     */
+    if(!Array.isArray(vnodeNew)) return
+
+    return vnodeNew.children.map((_, i) => {
+        const [oldChild, newChild] = [vnodeOld.children[i], vnodeNew.children[i]]
+        /**
+         * この時点で子要素が文字だと分かった場合は、子要素が変更されてるか確認して早めに切り上げる
+         */
+        if (patchText(thisEl, newChild, oldChild)) {
+            return
+        }
+        /**
+         * 子要素に対しても同じように再起的に処理を加えていく
+         */
+        componentPatchHelper(thisEl, oldChild, newChild, i)
+    })
 }
 
 /**
  * ページクラスを作る関数、new Page()を使いたくないから作った、普通は不要
- * @param {any} page 
- * @returns 
+ * @param {any} page
+ * @returns
  */
 export const page = (page) => new Page(page)
 
@@ -290,14 +278,15 @@ export class Page {
     }
     render() {
         const res = this.page()
+        const root = document.getElementById("root")
         this.old = res
         const v = componentRenderHelper(res)
-        document.getElementById("root")?.replaceChildren(v)
+        root?.replaceChildren(v)
     }
     patch() {
         const res = this.page()
-        //console.log(res)
-        componentPatchHelper(document.getElementById("root") , this.old, res, 1)
+        const root = document.getElementById("root")
+        componentPatchHelper(root, this.old, res)
         this.old = res
     }
 }
@@ -305,7 +294,7 @@ export class Page {
 /**
  * コンポーネント、何もしない、ただのファイル分け用
  * @template T
- * @param {(props: T)=> any} c 
+ * @param {(props: T)=> any} c
  * @returns (props: T) => any
  */
 export const component = (c) => {

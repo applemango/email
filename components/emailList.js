@@ -78,7 +78,6 @@ export const EmailList = EmailListComponent(({ emails, onChangeEmail })=> {
                         style: s({
                             fontSize: "14px",
                             wordBreak: "keep-all",
-                            
                         }),
                     }, email.body_subject || ""),
                 ),

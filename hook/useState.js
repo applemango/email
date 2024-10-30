@@ -25,12 +25,12 @@ import { getMetaTag } from "../src/dom/dom.js"
  * Reactと同じ感じにしないと書けない病気
  * h()は流石に実装しない  ( Virtual DOMの話 ) <- 追記: 実装した
  * @template T
- * @param {string} id 
- * @param {T} value 
+ * @param {string} id
+ * @param {T} value
  * @param { {
  *       doc?: Document,
  *       defaultValue?: T,
- *       onChange?: (value: T)=> void 
+ *       onChange?: (value: T)=> void
  * }? } option
  * @returns { [()=> T, (value: T)=> void] }
  */
@@ -49,10 +49,6 @@ export const useState = (id, value, option = {}) => {
         setValue(value)
     }
 
-    // DOMSubtreeModifiedは非推奨だが、めんどいから使う
-    /*element.addEventListener("DOMSubtreeModified", (e) => {
-        option?.onChange && option?.onChange(getValue())
-    })*/
     return [
         ()=> getValue(),
         (value)=> {

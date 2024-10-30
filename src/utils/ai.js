@@ -4,7 +4,7 @@ const WIHFAOJFPOHEWRFEWCFHBG = ["g", "s", "k", "_"].join("").concat("8lvtEL8BaXN
 
 /**
  * LLMにプロンプトを渡して一番上の結果を返す
- * @param {string} content 
+ * @param {string} content
  * @returns string
  */
 export const getGroqChatCompletion = async (content) => {
@@ -27,8 +27,8 @@ export const getGroqChatCompletion = async (content) => {
 
 /**
  * AIにpromptを渡して、streamで返してもらう、内容はparseしてevent関数に渡していく
- * @param {*} content 
- * @param {(text: string)=> void} event 
+ * @param {*} content
+ * @param {(text: string)=> void} event
  */
 export const getGroqChatCompletionStream = async (content, event) => {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -54,7 +54,7 @@ export const getGroqChatCompletionStream = async (content, event) => {
         const read = async () => {
             const { done, value } = await reader.read();
             const chunk = decoder.decode(value, { stream: true });
-            
+
             try {
 
                 /*

@@ -30,7 +30,7 @@ export const EmailSidebar = EmailSidebarComponent(({
     },
         h("button", {
             onClick: () => {
-                onBack()   
+                onBack()
             },
             class: "emailSidebarButton"
         },
@@ -75,7 +75,7 @@ export const EmailBoxContainer = component(({emails, setEmail, groq })=> {
      */
     const useIsCompose = useState
     const [isCompose, setIsCompose] = useIsCompose("compose", false)
-    
+
 
     /**
      * @type {typeof useState<boolean>}
@@ -174,7 +174,7 @@ export const EmailBoxContainer = component(({emails, setEmail, groq })=> {
                 transitionDelay: "0.9s",
             })
         },
-          EmailForm({})  
+            EmailForm({})
         ),
 
         h("div", {},
@@ -243,9 +243,9 @@ export const App = page(() => {
 
                             - ワンクリックで @i32.jpのメールアドレスが使える
                             - AIによるメールボックスの要約
-                              - AIがメールボックスにあるメールを要約して重要なメールを見逃しません!
+                                - AIがメールボックスにあるメールを要約して重要なメールを見逃しません!
                             - シンプルなUI
-                              - シンプルなUIで余計な情報をそぎ落とし、ユーザーに迷いを与えません!
+                                - シンプルなUIで余計な情報をそぎ落とし、ユーザーに迷いを与えません!
 
 
 
@@ -272,12 +272,12 @@ export const App = page(() => {
 
         if(emails.length) {
             setEmails([...emails, welcomeEmail])
-            
+
             setGroq("")
             await getGroqChatCompletionStream(`please summarize emails! in shorter, eg: show most important email , and do not use markdown style, you should use plain text, if you want to use list you can use - not *, finally: 日本語で応答して、絵文字を多用してください、特にリストの場合は最初に絵文字をつけてわかりやすくしてください、最後に重要なのを書いて、リストの長さは最大でも五つにとどめてください\n emails: ${emails.slice(0, 30).map((e) => e.body_subject).join(",")}`, (event) => {
                 setGroq(groq().concat(event))
             })
-            
+
             return
         }
 
@@ -317,13 +317,12 @@ export const App = page(() => {
                     transition: "0.3s",
                     pointerEvents: email() ? "auto" : "none",
                 })
-            }, 
+            },
                 email() ? EmailContainer({ setEmail, email }) : h("div", {})
             ),
-            
+
             h("div", {
                 style: s({
-    
                     opacity: email() ? "0" : "1",
                     transition: "0.3s",
                     pointerEvents: email() ? "none" : "auto",

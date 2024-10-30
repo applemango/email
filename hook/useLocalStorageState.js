@@ -1,14 +1,14 @@
 import { useState } from "./useState.js"
 
 /**
- * 
+ *
  * @template T
- * @param {string} id 
- * @param {T} value 
+ * @param {string} id
+ * @param {T} value
  * @param { {
  *       doc?: Document,
  *       defaultValue?: T,
- *       onChange?: (value: T)=> void 
+ *       onChange?: (value: T)=> void
  * }? } option
  * @returns { [()=> T, (value: T)=> void] }
  */

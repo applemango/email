@@ -27,6 +27,8 @@
 * [ ] Backend非依存化
   * [ ] 毎時Github Actionでjson fileの生成
   * [ ] Clientからそのjson fileをfetchする
+* [ ] デザイン変える
+  * [ ] メールを開くときにサイドバー的なので開いて一気に見やすくする
 
 ## よくわからないはなし
 

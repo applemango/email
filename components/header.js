@@ -7,7 +7,6 @@ import { component, h } from "../src/dom/virtualdom.js";
  */
 export const HeaderComponent = component
 export const Header = HeaderComponent(({}) => {
-    
     return h("div", {},
         h("div", {
             style: s({

@@ -127,7 +127,6 @@ export const EmailForm = EmailFormComponent(({ }) => {
     })
 
     return h("div", {},
-        
         h("div",{
             style: s({
                 borderTop: "1px solid #eee",
@@ -148,7 +147,7 @@ export const EmailForm = EmailFormComponent(({ }) => {
                 onChange: setFrom,
                 placeholder: "me@i32.jp"
             }),
-            
+
             EmailFormField({
                 label: "Subject",
                 value: subject(),
@@ -228,10 +227,10 @@ export const EmailForm = EmailFormComponent(({ }) => {
                                 text: body(),
                             })
                             const json = await res.json()
-                            if(json.ok) { 
+                            if(json.ok) {
                                 clearAll()
                             }
-                            
+
                         },
                         class: "emailSidebarButton"
                     },

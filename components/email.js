@@ -5,7 +5,6 @@ import * as Types from "../src/email/type.js"
  */
 export const EmailComponent = component
 export const Email = EmailComponent(({ email })=> {
-    
     return h("div", {},
         h("iframe", {
             style: "height: calc(100dvh - 48px); margin: 0; border: none; border-top-left-radius: 8px; border-top-right-radius: 8px;",
@@ -16,5 +15,4 @@ export const Email = EmailComponent(({ email })=> {
             }
         })
     )
-    
 })
