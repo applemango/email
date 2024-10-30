@@ -242,7 +242,7 @@ const componentPatchHelper = (parent, vnodeOld,  vnodeNew, index = 0) => {
      * レンダリングする必要がある子要素は常に配列で渡される
      * 逆に言えばundefinedなど不必要なものは配列で渡されないので無視する
      */
-    if(!Array.isArray(vnodeNew)) return
+    if(!Array.isArray(vnodeNew.children)) return
 
     return vnodeNew.children.map((_, i) => {
         const [oldChild, newChild] = [vnodeOld.children[i], vnodeNew.children[i]]
